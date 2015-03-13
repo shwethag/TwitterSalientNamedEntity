@@ -1,6 +1,6 @@
 #!/bin/bash
 echo $1
-java -jar gateNer.jar $1 
+java -jar gateNer.jar $1 $2
 
 fil="./res.xml"
 

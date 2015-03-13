@@ -1,2 +1,9 @@
-run run.sh file with agrument as input file containg tweet
+Install GATE Developer 8.0 in the system from the site https://gate.ac.uk/download/
+
+run run.sh file with following arguments
+
+1. Path to Gate Developer installation directory. If you are a ubuntu user, installation directory will be in home directory.
+
+2. Path to input tweet file. You can give the path of dataset_tweets.txt to test
+
 results will be stored in output.txt

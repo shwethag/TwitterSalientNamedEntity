@@ -14,7 +14,9 @@ import gate.util.GateException;
 import gate.util.persistence.PersistenceManager;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,9 +27,9 @@ public class NamedEntitiesGate {
 	private Corpus corpus;
 	private CorpusController annieController;
 
-	public NamedEntitiesGate(String docloc) throws GateException, IOException {
+	public NamedEntitiesGate(String gateloc,String docloc) throws GateException, IOException {
 		datasetDoc = docloc;
-		System.setProperty("gate.home", "/home/shwetha/GATE_Developer_8.0");
+		System.setProperty("gate.home", gateloc );
 		Gate.init();
 		File pluginsHome = Gate.getPluginsHome();
 		File anniePlugin = new File(pluginsHome, "ANNIE");
@@ -53,7 +55,6 @@ public class NamedEntitiesGate {
 
 	private void print() {
 		Iterator<Document> iter = corpus.iterator();
-		System.out.println("Print enter---");
 		while(iter.hasNext()) {
 		      Document doc = (Document) iter.next();
 		      AnnotationSet defaultAnnotSet = doc.getAnnotations();
@@ -72,15 +73,26 @@ public class NamedEntitiesGate {
 	}
 	
 	private void parseXML(String xmlDoc){
-		String[] lines = xmlDoc.split("\n");
-		for(String line : lines){
-			System.out.println(line);
+		try {
+			PrintWriter writer = new PrintWriter(new File("res.xml"));
+			String[] lines = xmlDoc.split("\n");
+			for(String line : lines){
+				writer.println(line);
+			}
+			writer.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
+		
 	}
 
 	public static void main(String[] args) {
+		if(args.length!=2){
+			System.err.println("Format <path of gate.home> <input file path>");
+			return;
+		}
 		try {
-			NamedEntitiesGate neg = new NamedEntitiesGate(args[0]);
+			NamedEntitiesGate neg = new NamedEntitiesGate(args[0],args[1]);
 			neg.execute();
 			neg.print();
 			
