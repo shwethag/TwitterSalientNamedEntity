@@ -8,5 +8,10 @@ while read line
 do
 	pat=`echo $line | egrep -o ">(\w*\s*)*</" | tr -d ">" | tr -d "</"`
 	pat=`echo $pat | tr ' ' '|'`
-	echo $pat >> output.txt
+	if [ $pat ] 
+	then
+		echo $pat >> output.txt
+	else
+		echo "{}" >> output.txt
+	fi
 done < $fil
