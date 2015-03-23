@@ -1,0 +1,21 @@
+This module identifies the named entities from a given document using custom rules defined.
+
+Steps to run:
+-------------
+run run.sh script file with parameter to input document
+results can be seen in output.txt
+
+
+Features
+---------
+1. twitie_tag jar is used provided from GATE to perform POS tagging on input document.
+2. The tagger is developed for tweet specific purpose with special tags such as HT (hashtag) USR (user tag)
+3. Input document will first be tagged to get tagged document with name tagged_doc.txt
+4. Tagged document is sent to java program which extracts the named entities identified.
+5. Output is sent to output.txt with PIPE (|) separated NE list on every tweet
+6. Following are the rules considered:
+	_USR (user eg @sachin) 
+ 	_HT (hash tag eg #felicity) 
+ 	_NNP (eg Boehner)
+ 	_NNP+ ( repeated occurence of NNP) 
+ 	_NNP+ _IN _NNP+ ( two sets of NNP with preposition or subordinating conjunction in between
