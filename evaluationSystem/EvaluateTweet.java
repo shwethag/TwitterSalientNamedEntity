@@ -84,23 +84,23 @@ public class EvaluateTweet {
 					listOfWordsFile2.add(array2[i]);
 				}
 
-				for (String arr1 : listOfWordsFile2) {
+				for (String arr1 : listOfWordsFile1) {
 
 					System.out.println("Inside for loop : comparing results ");
-					res1 = matchWordExactly(arr1, listOfWordsFile1, f1_o);
+					res1 = matchWordExactly(arr1, listOfWordsFile2, f1_o);
 					if(res1){
 						postitivecount++;
 					}
 					
 					if (!res1) {
-						res2 = matchWordPartially(arr1, listOfWordsFile1, f2_o);
+						res2 = matchWordPartially(arr1, listOfWordsFile2, f2_o);
 						if(res2){
 							partialcount++;
 						}
 						
 					}
 					if (!res2 && !res1) {
-						wordMissing(arr1, listOfWordsFile1, f3_o);
+						wordMissing(arr1, listOfWordsFile2, f3_o);
 						negativecount++;
 					}
 
@@ -149,13 +149,13 @@ public class EvaluateTweet {
 		boolean flag = false;
 
 		    for(String word1 :wordlist){
-				if (word1.contains(word)) {
+				if (word.contains(word1)) {
 					try {
 						writer_file2 = new PrintWriter(new FileWriter(
 								file, true));
 						writer_file2.println("ppositive");
 						writer_file2.close();
-						System.out.println("\n Word has macthed partially");
+						System.out.println("\n Word has matched partially");
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -182,7 +182,7 @@ public class EvaluateTweet {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void deleteFileIfExists(File file){
 		
 		if(file.exists()){
