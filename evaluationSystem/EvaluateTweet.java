@@ -99,7 +99,7 @@ public class EvaluateTweet {
 
 			}
 
-			//Another loop to cal Incorrect matrix
+			// Another loop to cal Incorrect matrix
 			while (((line1 = reader1.readLine()) != null)) {
 
 				listOfWordsFile1 = new ArrayList<String>();
@@ -130,7 +130,7 @@ public class EvaluateTweet {
 				for (String arr2 : listOfWordsFile2) {
 
 					if (!res1) {
-						res2 = matchWordsIncorrect(listOfWordsFile1,arr2);
+						res2 = matchWordsIncorrect(listOfWordsFile1, arr2);
 						if (res2) {
 							incorrectcount++;
 						}
@@ -144,7 +144,18 @@ public class EvaluateTweet {
 			countToFile(postitivecount, "correct", f1_o);
 			countToFile(partialcount, "partialCorrect", f1_o);
 			countToFile(missingcount, "missing", f1_o);
-			countToFile(incorrectcount,"incorrect",f1_o);
+			countToFile(incorrectcount, "incorrect", f1_o);
+
+			// For internal use only : not for reference
+			countToFile_OnlyNumeric(postitivecount);
+			countToFile_OnlyNumeric(partialcount);
+			countToFile_OnlyNumeric(missingcount);
+			countToFile_OnlyNumeric(incorrectcount);
+			ArrayList<String> arrlist = readLinesFromFiles("fileforInternalUse.txt");
+			String recall=calRecall(arrlist);
+			
+			//This will print results:
+			printToFile("Recall",recall,f1_o);
 
 		} catch (Exception e) {
 			System.out.println("There is error in reading file");
@@ -196,6 +207,60 @@ public class EvaluateTweet {
 
 	}
 
+	/*
+	 * Calculate Recall and pression :
+	 */
+	public static String calRecall(ArrayList<String> list) {
+
+		String correct = null;
+		String incorrect = null;
+		String missing = null;
+		int i = 0;
+
+		for (String word : list) {
+			i++;
+			if (i == 1) {
+				word = correct;
+			}
+			if (i == 2) {
+				word = missing;
+			}
+			if (i == 4) {
+				word = incorrect;
+			}
+		}
+		String recall = correct + incorrect + missing;
+
+		return recall;
+	}
+
+	/*
+	 * Calculate pression :
+	 */
+	public static String calPrecision(ArrayList<String> list) {
+
+		String correct = null;
+		String incorrect = null;
+		String partiallycorrect = null;
+		int i = 0;
+		
+		for (String word : list) {
+			i++;
+			if (i == 1) {
+				word = correct;
+			}
+			if (i == 2) {
+				word = partiallycorrect;
+			}
+			if (i == 4) {
+				word = incorrect;
+			}
+		}
+		String precision = correct + incorrect + partiallycorrect;
+		
+		return precision;
+	}
+
 	public static void deleteFileIfExists(File file) {
 
 		if (file.exists()) {
@@ -221,6 +286,55 @@ public class EvaluateTweet {
 		}
 	}
 
+	public static ArrayList<String> readLinesFromFiles(String fileforInternalUse) {
+
+		File file = new File(fileforInternalUse);
+
+		ArrayList<String> arraylist = new ArrayList<String>();
+		try {
+			file.createNewFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		FileReader fR1 = null;
+		try {
+			fR1 = new FileReader(file);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		BufferedReader reader1 = new BufferedReader(fR1);
+		String line1 = null;
+
+		try {
+			while (((line1 = reader1.readLine()) != null)) {
+				arraylist.add(line1);
+			}
+			reader1.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return arraylist;
+	}
+
+	public static void countToFile_OnlyNumeric(int countNumber) {
+		PrintWriter writer_file3;
+
+		try {
+			writer_file3 = new PrintWriter(new FileWriter(
+					"fileforInternalUse.txt", true));
+			writer_file3.printf("\n%s", countNumber);
+			writer_file3.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public static void countToFile(int countNumber, String type,
 			File filetoPrint) {
 		PrintWriter writer_file3;
@@ -229,6 +343,21 @@ public class EvaluateTweet {
 			writer_file3 = new PrintWriter(new FileWriter(filetoPrint, true));
 			writer_file3.printf("\n%s:%s", type, countNumber);
 			writer_file3.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void printToFile(String toPrint, String result,
+			File filetoPrint) {
+
+		PrintWriter writer_file1;
+
+		try {
+			writer_file1 = new PrintWriter(new FileWriter(filetoPrint, true));
+			writer_file1.printf("\n%s:%s", toPrint, toPrint);
+			writer_file1.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
