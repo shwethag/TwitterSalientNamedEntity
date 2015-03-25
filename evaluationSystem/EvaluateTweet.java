@@ -25,7 +25,7 @@ public class EvaluateTweet {
 			// Files for Input
 			File f1 = new File(file1InputFile);
 			File f2 = new File(file2InputFile);
-			
+
 			// Files for Output :
 			File f1_o = new File(file1_o);
 			deleteFileIfExists(f1_o);
@@ -45,7 +45,7 @@ public class EvaluateTweet {
 			boolean res1 = false;
 			boolean res2 = false;
 
-			int postitivecount = 0, partialcount = 0, missingcount = 0;
+			int postitivecount = 0, partialcount = 0, missingcount = 0, incorrectcount = 0;
 
 			// String s=reader1.readLine();
 
@@ -90,12 +90,51 @@ public class EvaluateTweet {
 						if (res2) {
 							partialcount++;
 						}
-
 					}
 					if (!res2 && !res1) {
 						missingcount++;
 					}
 
+				}// for loop
+
+			}
+
+			//Another loop to cal Incorrect matrix
+			while (((line1 = reader1.readLine()) != null)) {
+
+				listOfWordsFile1 = new ArrayList<String>();
+				listOfWordsFile2 = new ArrayList<String>();
+
+				line2 = reader2.readLine(); // Reading the second file
+
+				String replacement1 = line1.replace("|", ",");
+				String[] array1 = replacement1.split(",");
+
+				String replacement2 = line2.replace("|", ",");
+				String[] array2 = replacement2.split(",");
+
+				// Every time this only happens for 1 line
+				for (int i = 0; i < array1.length; i++) {
+
+					System.out.println(array1[i]);
+					listOfWordsFile1.add(array1[i]);
+
+				}
+
+				for (int i = 0; i < array2.length; i++) {
+
+					System.out.println(array2[i]);
+					listOfWordsFile2.add(array2[i]);
+				}
+
+				for (String arr2 : listOfWordsFile2) {
+
+					if (!res1) {
+						res2 = matchWordsIncorrect(listOfWordsFile1,arr2);
+						if (res2) {
+							incorrectcount++;
+						}
+					}
 				}// for loop
 
 			}
@@ -105,7 +144,8 @@ public class EvaluateTweet {
 			countToFile(postitivecount, "correct", f1_o);
 			countToFile(partialcount, "partialCorrect", f1_o);
 			countToFile(missingcount, "missing", f1_o);
-			
+			countToFile(incorrectcount,"incorrect",f1_o);
+
 		} catch (Exception e) {
 			System.out.println("There is error in reading file");
 			e.printStackTrace();
@@ -136,6 +176,20 @@ public class EvaluateTweet {
 			if (word.contains(word1) || word1.contains(word)) {
 				flag = true;
 				System.out.println("\n word matches partially");
+			}
+		}
+		return flag;
+
+	}
+
+	public static boolean matchWordsIncorrect(ArrayList<String> arraylist1,
+			String word) {
+
+		boolean flag = false;
+
+		for (String word1 : arraylist1) {
+			if (word.contains(word1) || word1.contains(word)) {
+				flag = true;
 			}
 		}
 		return flag;
@@ -184,9 +238,9 @@ public class EvaluateTweet {
 	public static void main(String args[]) {
 
 		try {
-			//arg1 : for input file 1(manual file), arg2: other file, arg3 : name of result file
-			EvaluateTweet.compareOutputFiles(args[1], args[2],
-					args[3]);
+			// arg1 : for input file 1(manual file), arg2: other file, arg3 :
+			// name of result file
+			EvaluateTweet.compareOutputFiles(args[0], args[1], args[2]);
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
