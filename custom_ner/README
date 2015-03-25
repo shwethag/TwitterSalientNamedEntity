@@ -2,20 +2,28 @@ This module identifies the named entities from a given document using custom rul
 
 Steps to run:
 -------------
-run run.sh script file with parameter to input document
-results can be seen in output.txt
+run run.sh script file with parameter to input document (can try with Dataset/dataset_tweets.txt)
+results can be seen in custom_ner_output.txt
 
 
 Features
 ---------
-1. twitie_tag jar is used provided from GATE to perform POS tagging on input document.
-2. The tagger is developed for tweet specific purpose with special tags such as HT (hashtag) USR (user tag)
-3. Input document will first be tagged to get tagged document with name tagged_doc.txt
-4. Tagged document is sent to java program which extracts the named entities identified.
-5. Output is sent to output.txt with PIPE (|) separated NE list on every tweet
-6. Following are the rules considered:
-	_USR (user eg @sachin) 
- 	_HT (hash tag eg #felicity) 
- 	_NNP (eg Boehner)
- 	_NNP+ ( repeated occurence of NNP) 
- 	_NNP+ _IN _NNP+ ( two sets of NNP with preposition or subordinating conjunction in between
+Preprocessing:
+	1. Non ASCII characters are removed which includes smileys and other special symbols
+	2. Special characters other than # @ , . ? are removed to reduce noise
+	3. twitie_tag jar is used provided from GATE to perform POS tagging on processed document.
+	4. The tagger is developed for tweet specific purpose with special tags such as HT (hashtag) USR (user tag)
+Processing:
+	1. Input document will first be tagged to get tagged document with name tagged_doc.txt
+	2. Tagged document is sent to java program which extracts the named entities identified.
+	3. Output is sent to output.txt with PIPE (|) separated NE list on every tweet
+	4. Following are the rules considered:
+		_USR (user eg @sachin) 
+ 		_HT (hash tag eg #felicity) 
+ 		_NNP (eg Boehner)
+ 		_NNP+ ( repeated occurence of NNP) 
+ 		_NNP+ _IN _NNP+ ( two sets of NNP with preposition or subordinating conjunction in between)
+ 					eg Bank of Thailand ( have considered only 'of' and 'for' to improve accuracy)
+ 	5. Left over special characters like # @ . and , are removed to get more meaningful Named entities
+
+
