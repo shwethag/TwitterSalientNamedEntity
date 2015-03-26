@@ -28,7 +28,9 @@ public class EvaluateTweet {
 
 			// Files for Output :
 			File f1_o = new File(file1_o);
+			File f2_o = new File("fileforInternalUse.txt");
 			deleteFileIfExists(f1_o);
+			deleteFileIfExists(f2_o);
 
 			ArrayList<String> listOfWordsFile1 = new ArrayList<String>();
 			ArrayList<String> listOfWordsFile2 = new ArrayList<String>();
@@ -153,9 +155,11 @@ public class EvaluateTweet {
 			countToFile_OnlyNumeric(incorrectcount);
 			ArrayList<String> arrlist = readLinesFromFiles("fileforInternalUse.txt");
 			String recall=calRecall(arrlist);
+			String precision=calPrecision(arrlist);
 			
 			//This will print results:
 			printToFile("Recall",recall,f1_o);
+			printToFile("Precision",precision,f1_o);
 
 		} catch (Exception e) {
 			System.out.println("There is error in reading file");
@@ -220,16 +224,21 @@ public class EvaluateTweet {
 		for (String word : list) {
 			i++;
 			if (i == 1) {
-				word = correct;
+				correct = word ;
 			}
-			if (i == 2) {
-				word = missing;
+			if (i == 3) {
+				missing = word ;
 			}
 			if (i == 4) {
-				word = incorrect;
+				incorrect = word  ;
 			}
 		}
-		String recall = correct + incorrect + missing;
+		Integer value_correct = Integer.valueOf(correct);
+		Integer value_incorrect = Integer.valueOf(incorrect);
+		Integer value_missing = Integer.valueOf(missing);
+		
+		int recall1 = value_correct + value_incorrect + value_missing;
+		String recall=Integer.toString(recall1);
 
 		return recall;
 	}
@@ -247,16 +256,22 @@ public class EvaluateTweet {
 		for (String word : list) {
 			i++;
 			if (i == 1) {
-				word = correct;
+				correct = word;
 			}
 			if (i == 2) {
-				word = partiallycorrect;
+				partiallycorrect = word;
 			}
 			if (i == 4) {
-				word = incorrect;
+				incorrect = word;
 			}
 		}
-		String precision = correct + incorrect + partiallycorrect;
+		
+		Integer value_correct = Integer.valueOf(correct);
+		Integer value_incorrect = Integer.valueOf(incorrect);
+		Integer value_partiallycorrect = Integer.valueOf(partiallycorrect);
+		
+		int precision1 = value_correct + value_incorrect + value_partiallycorrect;
+		String precision=Integer.toString(precision1);
 		
 		return precision;
 	}
@@ -310,7 +325,11 @@ public class EvaluateTweet {
 
 		try {
 			while (((line1 = reader1.readLine()) != null)) {
+				if(line1.equals("")){
+					
+				}else{
 				arraylist.add(line1);
+				}
 			}
 			reader1.close();
 		} catch (IOException e) {
@@ -356,7 +375,7 @@ public class EvaluateTweet {
 
 		try {
 			writer_file1 = new PrintWriter(new FileWriter(filetoPrint, true));
-			writer_file1.printf("\n%s:%s", toPrint, toPrint);
+			writer_file1.printf("\n%s:%s", toPrint, result);
 			writer_file1.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
