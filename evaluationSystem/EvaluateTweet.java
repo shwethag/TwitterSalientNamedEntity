@@ -244,7 +244,7 @@ public class EvaluateTweet {
 		
 		double recall1 = value_correct + (0.5 * value_partiallycorrect);
 		recall1 = recall1 / (value_correct + value_partiallycorrect + value_missing);
-		recall1 *= 10;
+		recall1 *= 100;
 		String recall= Double.toString(recall1);
 
 		return recall;
@@ -279,7 +279,7 @@ public class EvaluateTweet {
 		
 		double precision1 = value_correct + (0.5 * value_partiallycorrect);
 		precision1 = precision1 / ( value_correct + value_incorrect + value_partiallycorrect);
-		precision1 *= 10;
+		precision1 *= 100;
 		String precision=Double.toString(precision1);
 		
 		return precision;
