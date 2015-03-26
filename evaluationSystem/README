@@ -1,0 +1,8 @@
+
+This system is used for evaluation of results of different approaches taken.
+1. Compile the java code
+2. To run pass three arguments 
+	a. Path of file containing expected results ( Dataset/dataset_tweets_NE.txt)
+	b. Path of file containing generated results ( custom_ner or gate_ner or stanford_ner)
+	c. Any name of the file where results are to be stored. (eg. results.txt)
+3. output can be checked in result file (eg. results.txt)

@@ -219,12 +219,16 @@ public class EvaluateTweet {
 		String correct = null;
 		String incorrect = null;
 		String missing = null;
+		String partiallycorrect = null;
 		int i = 0;
 
 		for (String word : list) {
 			i++;
 			if (i == 1) {
 				correct = word ;
+			}
+			if (i == 2) {
+				partiallycorrect = word;
 			}
 			if (i == 3) {
 				missing = word ;
@@ -236,9 +240,12 @@ public class EvaluateTweet {
 		Integer value_correct = Integer.valueOf(correct);
 		Integer value_incorrect = Integer.valueOf(incorrect);
 		Integer value_missing = Integer.valueOf(missing);
+		Integer value_partiallycorrect = Integer.valueOf(partiallycorrect);
 		
-		int recall1 = value_correct + value_incorrect + value_missing;
-		String recall=Integer.toString(recall1);
+		double recall1 = value_correct + (0.5 * value_partiallycorrect);
+		recall1 = recall1 / (value_correct + value_partiallycorrect + value_missing);
+		recall1 *= 10;
+		String recall= Double.toString(recall1);
 
 		return recall;
 	}
@@ -270,8 +277,10 @@ public class EvaluateTweet {
 		Integer value_incorrect = Integer.valueOf(incorrect);
 		Integer value_partiallycorrect = Integer.valueOf(partiallycorrect);
 		
-		int precision1 = value_correct + value_incorrect + value_partiallycorrect;
-		String precision=Integer.toString(precision1);
+		double precision1 = value_correct + (0.5 * value_partiallycorrect);
+		precision1 = precision1 / ( value_correct + value_incorrect + value_partiallycorrect);
+		precision1 *= 10;
+		String precision=Double.toString(precision1);
 		
 		return precision;
 	}
