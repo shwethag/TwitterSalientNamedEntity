@@ -101,13 +101,19 @@ public class EvaluateTweet {
 
 			}
 
+			FileReader fR3 = new FileReader(f1);
+			FileReader fR4 = new FileReader(f2);
+			
+			BufferedReader reader3 = new BufferedReader(fR3);
+			BufferedReader reader4 = new BufferedReader(fR4);
+
 			// Another loop to cal Incorrect matrix
-			while (((line1 = reader1.readLine()) != null)) {
+			while (((line1 = reader3.readLine()) != null)) {
 
 				listOfWordsFile1 = new ArrayList<String>();
 				listOfWordsFile2 = new ArrayList<String>();
 
-				line2 = reader2.readLine(); // Reading the second file
+				line2 = reader4.readLine(); // Reading the second file
 
 				String replacement1 = line1.replace("|", ",");
 				String[] array1 = replacement1.split(",");
@@ -131,17 +137,17 @@ public class EvaluateTweet {
 
 				for (String arr2 : listOfWordsFile2) {
 
-					if (!res1) {
 						res2 = matchWordsIncorrect(listOfWordsFile1, arr2);
 						if (res2) {
 							incorrectcount++;
 						}
-					}
 				}// for loop
 
 			}
 			reader1.close();
 			reader2.close();
+			reader3.close();
+			reader4.close();
 
 			countToFile(postitivecount, "correct", f1_o);
 			countToFile(partialcount, "partialCorrect", f1_o);
@@ -171,9 +177,9 @@ public class EvaluateTweet {
 			ArrayList<String> wordlist) {
 
 		boolean flag = false;
-
+		word = word.trim();
 		for (String word_match : wordlist) {
-
+			word_match = word_match.trim();
 			if (word_match.equals(word)) {
 				flag = true;
 				System.out.println("\n Word has matched exactly");
