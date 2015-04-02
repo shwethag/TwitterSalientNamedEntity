@@ -1,0 +1,8 @@
+WikiRetrieve is a java project which retrieves the wiki pages corresponding to the named entities sent as parameter
+
+Steps to run: 
+
+- Import project from eclipse
+- Add jars in libs folder as reference
+- Build the project
+- Run the project 
