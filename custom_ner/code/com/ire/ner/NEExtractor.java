@@ -71,7 +71,7 @@ public class NEExtractor {
 				StringBuilder sb = new StringBuilder(nes);
 				sb.deleteCharAt(sb.length()-1);
 				nes=sb.toString();
-				nes+= "[P]" +PIPE;
+				nes+= "~" +PIPE;
 				i--;
 			}
 				else if (word.endsWith(_NN) || word.endsWith(_NNS)) {
