@@ -4,13 +4,16 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -26,13 +29,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
+import java.util.ArrayList;
 
 public class NEWiki {
 	String url = "https://en.wikipedia.org/w/";
 	HttpClient client;
-	HashSet<String> URLs = new HashSet<>();
-	List<String> results = new ArrayList<>();
+	HashSet<String> URLs = new HashSet<String>();
+	List<String> results = new ArrayList<String>();
 
 	public NEWiki() {
 		HttpHost proxy = new HttpHost("proxy.iiit.ac.in", 8080);
@@ -40,31 +43,51 @@ public class NEWiki {
 		client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
 	}
 
+	public List<String> getNEs(String fileName) {
+		List<String> list = new ArrayList<String>();
+		try {
+
+			File file = new File(fileName);
+			Scanner scanner = new Scanner(file);
+			scanner.useDelimiter("\r\n");
+			String tweet;
+			while (scanner.hasNext()) {
+				tweet = scanner.nextLine();
+				list.add(tweet);
+			}
+			scanner.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
 	public List<String> getTopURLs(String query, int n) {
+
+		// http://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=sachin+tendulkar&srlimit=50&srprop=titlesnippet&format=xml&continue=
 		String urlQuery = url + "api.php?action=query&format=xml";
 		String xmlOutput;
 		int i = 0;
 		int count;
-		String urlOffset = "&gsrlimit=50&gsroffset=";
+		String urlOffset = "&generator=search&gsrlimit=50&gsroffset=";
 		String offset = "";
 		try {
 			query = URLEncoder.encode(query, "UTF-8");
-			urlQuery += "&generator=search&gsrsearch=" + query
-					+ "&gsrprop=snippet&prop=info&inprop=url";
+			System.out.println(query);
+			urlQuery += "&gsrsearch=" + query
+					+ "&srprop=titlesnippet&format=xml&continue=";
 			for (i = 0; i < n; i += 50) {
 				offset = urlQuery + urlOffset + i;
 				xmlOutput = HttpQueries.sendGetQuery(offset, client);
 				count = extractURLs(xmlOutput);
-				if (count <= 50)
-					break;
 			}
-			
+
 		} catch (HttpException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} finally {
-			client.getConnectionManager().shutdown();
+			
 		}
 		return results;
 	}
@@ -88,27 +111,54 @@ public class NEWiki {
 			for (i = 0; i < count; i++) {
 				page = pageList.item(i);
 				properties = page.getAttributes();
-				propNode = properties.getNamedItem("fullurl");
+
 				String result = "";
-				result += propNode.getTextContent()+ " ";
+
 				propNode = properties.getNamedItem("title");
 				result += propNode.getTextContent() + " ";
 				results.add(result);
-				if (i >= 20)
-					break;
-			}
-		} catch (SAXException | IOException | ParserConfigurationException e) {
+						}
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return count;
 	}
-	
-	public static void main(String[] args) {
+
+	public static void main(String[] args) throws FileNotFoundException {
 		NEWiki eg = new NEWiki();
-		eg.getTopURLs("sachin", 3);
-		for(String res : eg.results){
-			System.out.println(res);
+
+		List<String> nerlist = eg.getNEs("custom_ner_output.txt");
+		PrintWriter writer = new PrintWriter(new File(
+				"custom_ner_count_output.txt"));
+		for (String s : nerlist) {
+			String words[] = s.split("\\|");
+			for (String i : words) {
+				// System.out.println(i);
+				eg.getTopURLs(i, 5000);
+				String count = (eg.results.size()) + "|";
+				System.out.println(count);
+				writer.print(count);
+				eg.results.clear();
+				/*
+				 * for (String res : eg.results) { writer.print(res);
+				 * 
+				 * }
+				 */
+			
+			}
+			writer.print("\n");
+			// System.out.print("\n");
 		}
+		writer.close();
+		eg.client.getConnectionManager().shutdown();
 	}
 }
-
