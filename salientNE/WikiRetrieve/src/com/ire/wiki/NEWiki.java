@@ -30,12 +30,18 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import java.util.ArrayList;
+import java.util.Hashtable.*;
 
 public class NEWiki {
 	String url = "https://en.wikipedia.org/w/";
 	HttpClient client;
 	HashSet<String> URLs = new HashSet<String>();
 	List<String> results = new ArrayList<String>();
+	private float TitleWeight;
+	private float nGramWeight;
+	private float NNPWeight;
+	private float BodyWeight;
+	private float titleCount;
 
 	public NEWiki() {
 		HttpHost proxy = new HttpHost("proxy.iiit.ac.in", 8080);
@@ -64,7 +70,6 @@ public class NEWiki {
 
 	public List<String> getTopURLs(String query, int n) {
 
-		// http://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=sachin+tendulkar&srlimit=50&srprop=titlesnippet&format=xml&continue=
 		String urlQuery = url + "api.php?action=query&format=xml";
 		String xmlOutput;
 		int i = 0;
@@ -72,14 +77,15 @@ public class NEWiki {
 		String urlOffset = "&generator=search&gsrlimit=50&gsroffset=";
 		String offset = "";
 		try {
+
 			query = URLEncoder.encode(query, "UTF-8");
-			System.out.println(query);
+			System.out.println(query);// ////////////////////////////////////////////
 			urlQuery += "&gsrsearch=" + query
 					+ "&srprop=titlesnippet&format=xml&continue=";
 			for (i = 0; i < n; i += 50) {
 				offset = urlQuery + urlOffset + i;
 				xmlOutput = HttpQueries.sendGetQuery(offset, client);
-				count = extractURLs(xmlOutput);
+				count = extractURLs(xmlOutput, query);
 			}
 
 		} catch (HttpException e) {
@@ -87,12 +93,27 @@ public class NEWiki {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} finally {
-			
+
 		}
 		return results;
 	}
 
-	private int extractURLs(String xmlOutput) {
+	private float rank(String ne, float tcount, int hits, int flag, int ngram) {
+		// TCount is no. of times NE is appeearing in titles
+		float score = 1;
+		if (hits != 0) {
+			TitleWeight = tcount / hits * 10;
+			BodyWeight = (1 - TitleWeight) * 2;
+		} else
+			TitleWeight = BodyWeight = 0;
+		nGramWeight = (ngram - 1) * 10;
+		NNPWeight = flag * 5;
+		score += TitleWeight + BodyWeight + nGramWeight + NNPWeight;
+		return score;
+
+	}
+
+	private int extractURLs(String xmlOutput, String query) {
 		int i = 0;
 		NamedNodeMap properties;
 		Node propNode, page;
@@ -116,8 +137,14 @@ public class NEWiki {
 
 				propNode = properties.getNamedItem("title");
 				result += propNode.getTextContent() + " ";
+				String words[] = query.split(" ");
+				for (String word : words) {
+					if (result.contains(word)) {
+						titleCount += 1 / words.length;
+					}
+				}
 				results.add(result);
-						}
+			}
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
@@ -141,19 +168,30 @@ public class NEWiki {
 				"custom_ner_count_output.txt"));
 		for (String s : nerlist) {
 			String words[] = s.split("\\|");
-			for (String i : words) {
+			for (String i : words)
+			{
+				int flag = 0;
+				if (i.endsWith("~")) {
+					flag = 1;
+				}
+
+				i.replace("~", ""); // ~ is used for assigning extra score for
+									// NNPs.
+
 				// System.out.println(i);
-				eg.getTopURLs(i, 5000);
-				String count = (eg.results.size()) + "|";
-				System.out.println(count);
-				writer.print(count);
+				eg.getTopURLs(i, 2100);
+				// String count = (eg.results.size()) + "|";
+				int hits = eg.results.size();
+				int ngram = i.split(" ").length;
+
+				float tcount = eg.titleCount;
+				float score = eg.rank(i, tcount, hits, flag, ngram);
+
+				for (String res : eg.results)
+					System.out.println(res);
+				writer.print(score + "|");
 				eg.results.clear();
-				/*
-				 * for (String res : eg.results) { writer.print(res);
-				 * 
-				 * }
-				 */
-			
+				eg.titleCount=0;
 			}
 			writer.print("\n");
 			// System.out.print("\n");
@@ -161,4 +199,5 @@ public class NEWiki {
 		writer.close();
 		eg.client.getConnectionManager().shutdown();
 	}
+
 }
