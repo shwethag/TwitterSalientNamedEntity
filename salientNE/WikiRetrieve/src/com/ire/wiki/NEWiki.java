@@ -139,7 +139,7 @@ public class NEWiki {
 				result += propNode.getTextContent() + " ";
 				String words[] = query.split(" ");
 				for (String word : words) {
-					if (result.contains(word)) {
+					if (result.toLowerCase().contains(word.toLowerCase())) {
 						titleCount += 1 / words.length;
 					}
 				}
