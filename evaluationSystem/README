@@ -1,8 +1,19 @@
 
 This system is used for evaluation of results of different approaches taken.
+
+To run EvaluateTweet.java
+----------------------------
 1. Compile the java code
 2. To run pass three arguments 
 	a. Path of file containing expected results ( Dataset/dataset_tweets_NE.txt)
 	b. Path of file containing generated results ( custom_ner or gate_ner or stanford_ner)
 	c. Any name of the file where results are to be stored. (eg. results.txt)
 3. output can be checked in result file (eg. results.txt)
+
+To run EvaluateSNE.java
+------------------------
+1. Compile the java code
+2. To run pass two arguments
+	a. Path of file containing expected results ( Dataset/custom_ner_SNE.txt)
+	b. Path of file containing generated results.
+3. In terminal, the results of PRECISION, RECALL and F-SCORE can be seen.
