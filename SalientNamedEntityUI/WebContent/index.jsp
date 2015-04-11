@@ -67,7 +67,7 @@ according to its centrality to the page content</p>
 			<div class="title">
 				<h2>IDENTIFIED SNE</h2>
 			</div>
-			<p><input type="text" class="paddingtop" value=""/></p>
+			<p><input type="text" class="paddingtop" id="TextboxValue" value=""/></p>
 			<a href="#" class="button">Result 1</a> </div>
 		<div id="tbox2">
 			<div class="title">

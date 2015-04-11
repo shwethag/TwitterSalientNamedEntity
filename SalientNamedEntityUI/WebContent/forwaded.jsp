@@ -4,7 +4,7 @@ Design by TEMPLATED
 http://templated.co
 Released for free under the Creative Commons Attribution License
 
-Name       : Amaryllis 
+Name       :  
 Description: A two-column, fixed-width design with dark color scheme.
 Version    : 1.0
 Released   : 20140131
@@ -87,8 +87,8 @@ according to its centrality to the page content</p>
             
             if(counter == 3){
 	    		
-	    		value1 = s;
-	    		System.out.println("^^^^^^^^^^^^^^"+value1);
+	    		value3 = s;
+	    		System.out.println("^^^^^^^^^^^^^^"+value3);
 	    	}
 	    	
 	    }  
@@ -97,19 +97,20 @@ according to its centrality to the page content</p>
 			<div class="title">
 				<h2>IDENTIFIED SNE</h2>
 			</div>
-			<p><input type="text" class="paddingtop" value="<%=value1%>"/></p>
+			<p id=TextboxValue1 ><%=value1%></p>
 			<a href="#" class="button">Result 1</a> </div>
 		<div id="tbox2">
 			<div class="title">
 				<h2>IDENTIFIED SNE</h2>
 			</div>
-			<p><input type="text" class="paddingtop" value="<%=value2%>"/></p>
+			<p id=TextboxValue2 ><%=value2%></p>
 			<a href="#" class="button">Result 2</a> </div>
 		<div id="tbox3">
 			<div class="title">
 				<h2>IDENTIFIED SNE</h2>
 			</div>
-			<p><input type="text" class="paddingtop" value="<%=value3%>"/></p>
+		
+			<p id=TextboxValue3 ><%=value3%></p>
 			<a href="#" class="button">Result 3</a> </div>
 	</div>
 </div>

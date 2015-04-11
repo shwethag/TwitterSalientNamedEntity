@@ -655,6 +655,23 @@
 }
 
 /*********************************************************************************/
+/* TextBox for displaying values                                                                 */
+/*********************************************************************************/
+#TextboxValue1 {
+    font-size: 20px;
+    font-family: 'Rockwell Extra Bold', 'Rockwell Bold', monospace;
+}
+
+#TextboxValue2 {
+    font-size: 15px;
+    font-family: 'Lucida Console', 'Lucida Sans Typewriter', monaco, 'Bitstream Vera Sans Mono', monospace;
+}
+
+#TextboxValue3 {
+    font-size: 12px;
+}
+
+/*********************************************************************************/
 /* Three Columns                                                                 */
 /*********************************************************************************/
 
