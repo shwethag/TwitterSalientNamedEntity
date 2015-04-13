@@ -1,5 +1,5 @@
 Boehner,Obama
-AIDS,World,PPNC
+AIDS,PPNC,World
 Amanda Ben,police
 obama
 globalwarming,85degrees,Day
@@ -318,122 +318,122 @@ photography
 P41 Eisbrecher,Director,Photography
 Loon Island Lighthouse,Landscape
 photography
-Nature Network~,blog,
-Viewpoint~,Angles~,Photography~,
-advice,tco,photography...,
-night photo shoot,
-photography,natural,canon,freelance,photos,videography,ttps,tco,
-Mike Reyfman~,Applebees,Landscapes,Photography,Nature,Travel,
-A1~,Tourism~,conf,CT~,
-WalesAirForum,Roger Lewis~,Cardiff,Wales,avgeek,
-travel,tourism,erosion,Tibetan,culture,
-trueTibet,landscape,tourist,theme park,China~,regime,travel,tourism,tco,F~,
-Tourism~,country,skies,observation,ast,
-trueTibet,landscape,tourist,theme park,China~,regime,travel,tourism,tco,F~,
-CatalanMuseums,Catalan Museum~,souvenirs,idea,tourism,visitors,Don~,f,
-SA~,Tourism~,role,sustainability,
-tourism,Egypt,increases,pct,Jan CAPMAS~,
-tour,Skills Development Programme~,Wakkerstroom Tourism~,
-Turismo,,Zaia,presenta,Vinitaly,
-SA~,Tourism~,role,sustainability,E,
-idea,tourism,Tibet,form,terms,ethics,
-Iran,Photos,trips,Shiraz,Hafezieh,Nowruz,holidays,
-Tourism,Iran,
-Morning~,ijen,Crater~,East Java~,Indonesia~,tourism,eastjava,holiday,kids,Indonesia,ttps,tco,
-Atlantic City~,tourism push,entertainment,
-ac,atlantic,jersey,
-Tourism,Jordan,LoveJO,GoJordan,VisitJordan,
-Manchester,day,tourism,sightseeing,
-Tourism,Jordan,LoveJO,GoJordan,VisitJordan,
-tourism survey,growth,jobs,tourism sector,busin,
-meta,guide lc,St~,Lucia~,Record~,Tourism Growth~,
-Tourism,Jordan,LoveJO,GoJordan,VisitJordan,
-taxi driver,Artane~,place,guy,job,tourism board now,
-Places~,United States~,
-Places~,United States~,
-Security~,fears,Kenya~,Tanzanias~,favor,tourism,
-TOURISM WEBSITE~,
-Dmitris Tsoukalas~,company,tourism,Athens~,Greece~,
-photo,indonesia tourism,Street~,Gunung~,
-London Mayor Boris Johnson~,tourism,gems,London~,Evening Standard~,
-CCCU~,hospitality,tourism,logo comp,
-AMB,Mohammed~,tourism sector,pride,nature beauty,
-spring,Kurokawa Onsen~,introduction,Tokyo Olympics Japan Tourism Video~,Olympics,
-Places~,United States~,
-masterclassing,seat,Digital Travel~,Tourism Masterclass~,Dubai~,April~,
-North East~,Gov~,tourism,
-masterclassing,Tourism~,brands,relationships,audience,Brandwatch,Pj~,
-Places~,United States~,
-Iran,Photos,trips,Shiraz,Hafezieh,Nowruz,holidays,
-Tourism,Iran,
-Post,Nigeria~,tourism,referral hospitals,Post Nigeria~,
-BittuSahgal,Rwanda~,tourism,communities,India~,leaf,book,
-Post,Nigeria~,tourism,referral hospitals,Post Nigeria~,
-Head~,School~,Hospitality Management~,Tourism~,future,tourism,Ireland~,
-Mighty Rim~,256Blogs,VisitUganda,Triathlon,Fitness,Ad,
-Humber East Liberal~,studio,businesses,tourism guide,
-Tourism~,Barcelona~,
-ICICIBank,Q4~,question,cricket merchandise,
-SCG Sydney Cricket Ground~,MCG~,
-half century,Tamil Nadu~,Hyderabad~,runs,
-PTV,Sports~,Shoaib Malik~,choice,captain,cricket team,
-Cricket~,fevers,
-South Africa~,bunch,players,luck,credit,cricket,pres,
-cricket ball,compound,neighbour s,waali,
-WC Meetings~,projector,Bengaluru~,firms,India Aus~,clash,Cwc15,
-cricket world cup match cwc,Something~,India~,victory today,
-Pakistani,Cricket,Lovers~,Man~,
-divyangana,tv,India~,everyone,money,name,cricket,
-LeftArmAround,captain,Pakistan~,cricket,India~,
-cricket,vote,
-Cricket~,couples,Virat Anushka~,love saga,
-AB~,Jacques Kallis~,South Africa~,Cricket World Cup~,run scorer,ProteaFIRE,
-am,Former Pakistan~,cricket captain,
-rounder produce,Pakistan~,
-{}
-TelegraphSport,KP24,Surrey~,salary,money,
-cricket force day,Saturday~,start,Lewis~,sausage sarnies,
-baby,cricket,
-Wirral~,cricketer,England~,victory,Australia~,
-Cricket Semi~,Aussie~,India~,
-Elections~,Cricket~,D~,Indians,Australia,WC2015,WeWon,GiveitBack.,
-hai,Kal~,bhi cricket,BleedBlue,
-flags,Kashmir,Pak~,cricket match,
-aajtak,Inzmaam~,Sanjay~,cricket,aap,
-Reminder Cricket~,Newbury College~,Sunday~,U9 U17~,boys girls,U17~,seniors,
-Cricket,World Surrey~,Kevin Pietersen~,Surrey Chief Executive Richard Gould~,h,GwX~,
-ImranKhanPTI,Stars~,tco,Celebs~,Satsun~,
-situation,KP~,cricket,year,commitment,
-Babu,Bhaiyaa Work~,Worship~,but,Cricket~,religion,work,
-am,Former Pakistan~,cricket captain,
-rounder produce,Pakistan~,
-{}
-a2aca,Arabs~,cricket,pitch,bitch,
-Ra~,show cricket,
-Google~,doodle basks,India Australia~,cricket frenzy Internet giant,Google~,W~,
-Trip Tiek~,
-CapitalTV,News~,WorldCup,teams,Chairman~,PTI,ImranKhanPTI,Cricket,NZ,AUS,
-AnupKaphle,Slate~,cricket,one,
-tv,S Cricket Academy Home~,Stars~,tco,
-Celebs~,
-Cricket Australia~,CricketAustralia,World Cup~,semi,Australia~,India~,Queensland AUS B~,
-Younis,S Cricket Academy Home~,Stars~,tco,
-Celebs~,
-South Africa~,bunch,players,luck,credit,cricket,pres,
-fan,ipl,cricket board,
-school,course timing,kids,cricket,WC15,
-yrf,Cricket World Cup~,event,Indians~,patriotism,ChakDeIndia,
-Special~,India~,Australia Semi Final Match ICC Cricket World Cup~,
-fans,natives,Sydney Cricket Ground~,CWC15,
-RIP~,ICC,
-day,cricket,March~,
-{}
-{}
-ShameIndia,
-BCCI,
-{}
-{}
-rahman,sardesairajdeep,assessment,Anyway~,men,cricket,
+aof flower photography Mother,Nature Network,blog
+Viewpoint,Angles,Photography
+advice,photography
+night photo shoot
+photography,natural,canon,freelance,videography
+Akanshagautam Meanders,Mike Reyfman,Applebees,Landscapes,Photography
+A1,Tourism,CT
+Roger Lewis,WalesAirForum,Cardiff,Wales,avgeek
+Tibetan,tourism,erosion
+theme park,China,trueTibet
+Tourism,skies,observation,ast
+theme park,China,trueTibet
+Catalan Museum,CatalanMuseums,souvenirs
+SA,Tourism,sustainability
+Jan CAPMAS,Egypt,pct
+Skills Development Programme,Wakkerstroom Tourism,tour
+Turismo,Vinitaly,Zaia,presenta
+SA,Tourism,sustainability
+Tibet,tourism,form,ethics
+Shiraz,Hafezieh,Nowruz,Iran
+Iran,Tourism
+East Java,Indonesia,Crater,ijen,eastjava
+Atlantic City,tourism push,entertainment
+atlantic,jersey,ac
+Jordan,LoveJO,GoJordan,VisitJordan
+Manchester,tourism,sightseeing
+Jordan,LoveJO,GoJordan,VisitJordan
+tourism survey,tourism sector,busin
+Tourism Growth,guide lc,Lucia,Record
+Jordan,LoveJO,GoJordan,VisitJordan
+tourism board now,taxi driver,Artane
+United States,Places
+United States,Places
+Tanzanias,Security,Kenya
+TOURISM WEBSITE
+Dmitris Tsoukalas,Athens,Greece
+indonesia tourism,Gunung,Street
+London Mayor Boris Johnson,Evening Standard,London
+logo comp,CCCU,hospitality
+AMB,Mohammed,tourism sector,nature beauty
+Tokyo Olympics Japan Tourism Video,Kurokawa Onsen,Olympics,spring
+United States,Places
+Tourism Masterclass,Digital Travel,masterclassing,Dubai,April
+North East,Gov,tourism
+masterclassing,Tourism,Brandwatch,Pj
+United States,Places
+Shiraz,Hafezieh,Nowruz,Iran,Photos
+Tourism,Iran
+Post Nigeria,referral hospitals,Nigeria
+BittuSahgal,Rwanda,India
+Post Nigeria,referral hospitals,Nigeria
+Hospitality Management,Ireland,School,Tourism
+Mighty Rim,VisitUganda,Triathlon
+Humber East Liberal,tourism guide,businesses
+Barcelona,Tourism
+ICICIBank,cricket merchandise,question
+SCG Sydney Cricket Ground,MCG
+Tamil Nadu,half century,Hyderabad
+Shoaib Malik,cricket team,PTV,Sports
+Cricket,fevers
+South Africa,bunch,cricket,pres
+cricket ball,neighbour s,waali,compound
+WC Meetings,India Aus,Bengaluru,Cwc15
+cricket world cup match cwc,victory today,India
+Pakistani,Cricket,Lovers
+divyangana,India,money,cricket
+LeftArmAround,Pakistan,India,captain
+cricket,vote
+Virat Anushka,love saga,Cricket,couples
+Cricket World Cup,Jacques Kallis,South Africa,ProteaFIRE
+Former Pakistan,cricket captain
+rounder produce,Pakistan
+WeWantMalikBack,realshoaibmalik
+TelegraphSport,KP24,Surrey
+cricket force day,sausage sarnies,Lewis
+baby,cricket
+Wirral,England,Australia,victory
+Cricket Semi,Aussie,India
+WC2015,WeWon,GiveitBack,Cricket,Indians,Australia
+bhi cricket,BleedBlue,Kal
+Kashmir,Pak,cricket match
+Inzmaam,Sanjay,cricket,aajtak
+Reminder Cricket,Newbury College,U9 U17,boys girls
+Surrey Chief Executive Richard Gould,Kevin Pietersen,World Surrey
+ImranKhanPTI,Satsun,Celebs
+DGoughie,KP,cricket
+Babu,Bhaiyaa Work,Worship,Cricket
+Former Pakistan,cricket captain
+rounder produce,Pakistan
+WeWantMalikBack
+a2aca,Arabs,cricket,pitch
+show cricket,Ra
+cricket frenzy Internet giant,doodle basks,India Australia
+VB Cricket Mens D Carpet Burns,Trip Tiek
+ImranKhanPTI,CapitalTV,WorldCup,PTI,NZ,AUS
+AnupKaphle,Slate,cricket
+S Cricket Academy Home,Stars,tv
+Celebs
+Queensland AUS B,Cricket Australia,World Cup,Australia,India
+S Cricket Academy Home,Younis,Stars
+Celebs
+South Africa,bunch,cricket,pres
+cricket board,fan,ipl
+course timing,WC15,cricket
+Cricket World Cup,ChakDeIndia,patriotism,yrf
+Australia Semi Final Match ICC Cricket World Cup,Special,India
+Sydney Cricket Ground,CWC15,fans,natives
+RIP,ICC
+day,cricket,March
+IndiaBoughtICC
+SaveCricketFromICC
+ShameIndia
+BCCI
+EWNsport
+VVSLaxman281
+sardesairajdeep,rahman,assessment,cricket
 So~,Pietersen~,Test Batsman~,Division~,County Cricket~,likes,Leicestershire~,cock,
 Cricket Wireless Distributor~,mPLACES,today,
 Pak CRicket~,team,Comeback~,
