@@ -29,8 +29,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import java.util.ArrayList;
-import java.util.Hashtable.*;
 
 public class NEWiki {
 	String url = "https://en.wikipedia.org/w/";
@@ -99,16 +97,20 @@ public class NEWiki {
 	}
 
 	private float rank(String ne, float tcount, int hits, int flag, int ngram) {
-		// TCount is no. of times NE is appeearing in titles
+		// TCount is no. of times NE is appearing in titles
 		float score = 1;
 		if (hits != 0) {
-			TitleWeight = tcount / hits * 10;
-			BodyWeight = (1 - TitleWeight) * 2;
+			TitleWeight = (tcount / hits) * 10;
+			BodyWeight = (1 - TitleWeight/10) * 2;
+			
 		} else
 			TitleWeight = BodyWeight = 0;
-		nGramWeight = (ngram - 1) * 10;
+		nGramWeight=0;
+		if(ngram>1)
+			nGramWeight = (ngram - 1) * 10;
 		NNPWeight = flag * 5;
-		score += TitleWeight + BodyWeight + nGramWeight + NNPWeight;
+		score = score + TitleWeight + BodyWeight + nGramWeight + NNPWeight; 
+		//System.out.print(score);
 		return score;
 
 	}
@@ -168,16 +170,15 @@ public class NEWiki {
 				"custom_ner_count_output.txt"));
 		for (String s : nerlist) {
 			String words[] = s.split("\\|");
-			for (String i : words)
-			{
+			List<Float> scores = new ArrayList<Float>();
+			List<String> SNEs = new ArrayList<String>();
+			for (String i : words) {
 				int flag = 0;
 				if (i.endsWith("~")) {
+					// ~ is used for assigning extra score for NNPs
 					flag = 1;
+					i.replace("~", "");
 				}
-
-				i.replace("~", ""); // ~ is used for assigning extra score for
-									// NNPs.
-
 				// System.out.println(i);
 				eg.getTopURLs(i, 2100);
 				// String count = (eg.results.size()) + "|";
@@ -186,14 +187,37 @@ public class NEWiki {
 
 				float tcount = eg.titleCount;
 				float score = eg.rank(i, tcount, hits, flag, ngram);
-
-				for (String res : eg.results)
-					System.out.println(res);
-				writer.print(score + "|");
+				scores.add(score);
+				
+				
+				// for (String res : eg.results)
+				// System.out.println(res);
+				//writer.print(score + ",");
 				eg.results.clear();
-				eg.titleCount=0;
+				eg.titleCount = 0;
 			}
-			writer.print("\n");
+			for(int j=0;j<3;j++)
+			{
+				if(j>scores.size())
+					break;
+				int maxindex=0;
+				float max = 0;
+				for(int sc=0;sc<scores.size();sc++)
+				{
+					if(scores.get(sc)>max){
+						System.out.println(scores.get(sc));
+						max = scores.get(sc);
+						maxindex=sc;
+					}
+				}
+				SNEs.add(words[maxindex]);
+				scores.set(maxindex, -1.0f);
+			
+			}
+			for(String kk : SNEs)
+				System.out.println(kk);
+			
+			///writer.print("\n");
 			// System.out.print("\n");
 		}
 		writer.close();
