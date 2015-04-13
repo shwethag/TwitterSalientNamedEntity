@@ -1,6 +1,8 @@
 package com.ire.wiki;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -8,12 +10,11 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -77,13 +78,16 @@ public class NEWiki {
 		try {
 
 			query = URLEncoder.encode(query, "UTF-8");
-			System.out.println(query);// ////////////////////////////////////////////
+		//	System.out.println(query);// ////////////////////////////////////////////
 			urlQuery += "&gsrsearch=" + query
-					+ "&srprop=titlesnippet&format=xml&continue=";
+					+ "&gsrprop=titlesnippet&format=xml&continue=";
 			for (i = 0; i < n; i += 50) {
 				offset = urlQuery + urlOffset + i;
 				xmlOutput = HttpQueries.sendGetQuery(offset, client);
+				//xmlOutput = HttpQueries.sendGet(offset);
+				//System.out.println(xmlOutput);
 				count = extractURLs(xmlOutput, query);
+				//break;
 			}
 
 		} catch (HttpException e) {
@@ -177,7 +181,7 @@ public class NEWiki {
 				if (i.endsWith("~")) {
 					// ~ is used for assigning extra score for NNPs
 					flag = 1;
-					i.replace("~", "");
+					i=i.replace("~", "");
 				}
 				// System.out.println(i);
 				eg.getTopURLs(i, 2100);
@@ -205,7 +209,7 @@ public class NEWiki {
 				for(int sc=0;sc<scores.size();sc++)
 				{
 					if(scores.get(sc)>max){
-						System.out.println(scores.get(sc));
+						//System.out.println(scores.get(sc));
 						max = scores.get(sc);
 						maxindex=sc;
 					}
@@ -214,8 +218,16 @@ public class NEWiki {
 				scores.set(maxindex, -1.0f);
 			
 			}
-			for(String kk : SNEs)
-				System.out.println(kk);
+			StringBuilder builder = new StringBuilder();
+			for(String sne : SNEs){
+				if(sne.endsWith("~"))
+					sne = sne.substring(0, sne.lastIndexOf('~'));
+				builder.append(sne + ",");
+				
+			}
+			System.out.println(builder.substring(0, builder.lastIndexOf(",")));
+			
+			
 			
 			///writer.print("\n");
 			// System.out.print("\n");
