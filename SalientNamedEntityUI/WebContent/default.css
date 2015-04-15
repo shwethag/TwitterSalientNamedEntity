@@ -55,7 +55,7 @@
 	.container
 	{
 		margin: 0px auto;
-		width: 1200px;
+		width: 1400px;
 	}
 	
 
@@ -256,12 +256,12 @@
 	{
 		display: inline-block;
 		margin-top: 2em;
-		padding: 0.8em 2em;
+		padding: 0.3em 2em;
 		background: #64ABD1;
 		line-height: 1.8em;
 		letter-spacing: 1px;
 		text-decoration: none;
-		font-size: 0.7em;
+		font-size: 1.2em;
 		color: #FFF;
 	}
 	
@@ -309,7 +309,7 @@
 	#header-wrapper
 	{
 		overflow: hidden;
-		background: #C73399 url(images/overlay.png) repeat;
+		background: #3366CC repeat;
 	}
 
 	#header
@@ -323,7 +323,7 @@
 
 	#logo
 	{
-		padding: 8em 0em 4em 0em;
+		padding: 4em 0em 2em 0em;
 	}
 	
 	#logo h1
@@ -345,12 +345,12 @@
 		padding-right: 0.5em;
 		text-transform: uppercase;
 		font-size: 0.90em;
-		color: rgba(255,255,255,1);
+		color: rgba(250,255,255,1);
 	}
 
 	#logo span a
 	{
-		color: rgba(255,255,255,0.8);
+		color: rgba(255,155,255,0.8);
 	}
 	
 	
@@ -650,8 +650,11 @@
 /*********************************************************************************/
 #txtbox
 {
-    height:60px;
-    font-size:14pt;
+    height:275px;
+    font-size:20pt;
+    width:550pt;
+    max-width:550pt;
+    max-height:275px;
 }
 
 /*********************************************************************************/
@@ -682,6 +685,13 @@
 		padding-top: 1em;
 		border-top: 1px solid rgba(0,0,0,0.2);
 		text-align: center;
+		padding-left: 2em;
+	}
+	
+	#sn1
+	{
+		width: 10em;
+		font-size: 5em;
 	}
 	
 	#three-column h2
@@ -708,13 +718,34 @@
 		
 	}
 		
-	#three-column #tbox1,
-	#three-column #tbox2,
-	#three-column #tbox3
+	#three-column #tbox
 	{
-		float: left;
-		width: 320px;
 		padding: 20px 40px 20px 40px;
+		text-align: center;
+		
+	}
+	
+	#sne1,#sne2,#sne3{
+		border:none;
+		width:600pt;
+		text-align: center;
+	}
+	
+	#sne1{
+		margin:auto;
+		font-size: 5em;
+		padding: 30px;
+	}
+	
+	#sne2{
+		text-align:center;
+		font-size: 3.5em;
+		padding: 30px;
+	}
+	
+	#sne3{
+		font-size: 2em;	
+		padding: 30px;
 	}
 	
 	#fortextbox {
