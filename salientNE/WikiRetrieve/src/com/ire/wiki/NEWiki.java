@@ -43,12 +43,15 @@ public class NEWiki {
 	private float BodyWeight;
 	private float titleCount;
 	private Map<String,Integer> neMap;
+	private String scoreFile = "./score.txt";
+	private BufferedWriter scoreWriter;
 
-	public NEWiki() {
+	public NEWiki() throws IOException {
 		neMap = new HashMap<String, Integer>();
 		HttpHost proxy = new HttpHost("proxy.iiit.ac.in", 8080);
 		client = new DefaultHttpClient();
 		client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+		scoreWriter = new BufferedWriter(new FileWriter(scoreFile));
 	}
 
 	public List<String> getNEs(String fileName) {
@@ -93,10 +96,14 @@ public class NEWiki {
 				extractURLs(xmlOutput, query);
 				//break;
 			}
-
+			
+			scoreWriter.write(query+"="+neMap.get(query)+"\n");
+			scoreWriter.flush();
 		} catch (HttpException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 
@@ -244,6 +251,7 @@ public class NEWiki {
 			///writer.print("\n");
 			// System.out.print("\n");
 		}
+		eg.scoreWriter.close();
 		writer.close();
 		eg.client.getConnectionManager().shutdown();
 	}
