@@ -1,18 +1,20 @@
 package com.ire.wiki;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -32,17 +34,18 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 public class NEWiki {
-	String url = "https://en.wikipedia.org/w/";
-	HttpClient client;
-	HashSet<String> URLs = new HashSet<String>();
-	List<String> results = new ArrayList<String>();
+	private String url = "https://en.wikipedia.org/w/";
+	private HttpClient client;
+	private List<String> results = new ArrayList<String>();
 	private float TitleWeight;
 	private float nGramWeight;
 	private float NNPWeight;
 	private float BodyWeight;
 	private float titleCount;
+	private Map<String,Integer> neMap;
 
 	public NEWiki() {
+		neMap = new HashMap<String, Integer>();
 		HttpHost proxy = new HttpHost("proxy.iiit.ac.in", 8080);
 		client = new DefaultHttpClient();
 		client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
@@ -68,25 +71,26 @@ public class NEWiki {
 	}
 
 	public List<String> getTopURLs(String query, int n) {
-
+		if(neMap.containsKey(query)){
+			return results;
+		}
 		String urlQuery = url + "api.php?action=query&format=xml";
 		String xmlOutput;
 		int i = 0;
-		int count;
 		String urlOffset = "&generator=search&gsrlimit=50&gsroffset=";
 		String offset = "";
 		try {
 
-			query = URLEncoder.encode(query, "UTF-8");
+			String qry = URLEncoder.encode(query, "UTF-8");
 		//	System.out.println(query);// ////////////////////////////////////////////
-			urlQuery += "&gsrsearch=" + query
+			urlQuery += "&gsrsearch=" + qry
 					+ "&gsrprop=titlesnippet&format=xml&continue=";
 			for (i = 0; i < n; i += 50) {
 				offset = urlQuery + urlOffset + i;
 				xmlOutput = HttpQueries.sendGetQuery(offset, client);
 				//xmlOutput = HttpQueries.sendGet(offset);
 				//System.out.println(xmlOutput);
-				count = extractURLs(xmlOutput, query);
+				extractURLs(xmlOutput, query);
 				//break;
 			}
 
@@ -151,28 +155,34 @@ public class NEWiki {
 				}
 				results.add(result);
 			}
+			Integer cnt;
+			if((cnt = neMap.get(query))!=null){
+				neMap.put(query, cnt+count);
+			}else{
+				neMap.put(query, count);
+			}
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return count;
 	}
 
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws IOException {
 		NEWiki eg = new NEWiki();
 
 		List<String> nerlist = eg.getNEs("custom_ner_output.txt");
-		PrintWriter writer = new PrintWriter(new File(
-				"custom_ner_count_output.txt"));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
+				"custom_ner_count_output.txt")));
+		int k=1;
 		for (String s : nerlist) {
+			System.out.println(k);
+			k++;
 			String words[] = s.split("\\|");
 			List<Float> scores = new ArrayList<Float>();
 			List<String> SNEs = new ArrayList<String>();
@@ -186,11 +196,13 @@ public class NEWiki {
 				// System.out.println(i);
 				eg.getTopURLs(i, 2100);
 				// String count = (eg.results.size()) + "|";
-				int hits = eg.results.size();
+				//int hits = eg.results.size();
+				int hits = eg.neMap.get(i);
 				int ngram = i.split(" ").length;
 
 				float tcount = eg.titleCount;
 				float score = eg.rank(i, tcount, hits, flag, ngram);
+				System.out.println("word: " + i + " score : " + score);
 				scores.add(score);
 				
 				
@@ -225,8 +237,8 @@ public class NEWiki {
 				builder.append(sne + ",");
 				
 			}
-			System.out.println(builder.substring(0, builder.lastIndexOf(",")));
-			
+			writer.write(builder.substring(0, builder.lastIndexOf(","))+"\n");
+			writer.flush();
 			
 			
 			///writer.print("\n");
