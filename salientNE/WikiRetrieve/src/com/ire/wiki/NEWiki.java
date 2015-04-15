@@ -42,12 +42,12 @@ public class NEWiki {
 	private float NNPWeight;
 	private float BodyWeight;
 	private float titleCount;
-	private Map<String,Integer> neMap;
+	private Map<String, Float> neMap;
 	private String scoreFile = "./score.txt";
 	private BufferedWriter scoreWriter;
 
 	public NEWiki() throws IOException {
-		neMap = new HashMap<String, Integer>();
+		neMap = new HashMap<String, Float>();
 		HttpHost proxy = new HttpHost("proxy.iiit.ac.in", 8080);
 		client = new DefaultHttpClient();
 		client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
@@ -73,9 +73,9 @@ public class NEWiki {
 		return list;
 	}
 
-	public List<String> getTopURLs(String query, int n) {
-		if(neMap.containsKey(query)){
-			return results;
+	public boolean getTopURLs(String query, int n) {
+		if (neMap.containsKey(query.toLowerCase())) {
+			return true;
 		}
 		String urlQuery = url + "api.php?action=query&format=xml";
 		String xmlOutput;
@@ -85,20 +85,19 @@ public class NEWiki {
 		try {
 
 			String qry = URLEncoder.encode(query, "UTF-8");
-		//	System.out.println(query);// ////////////////////////////////////////////
+			// System.out.println(query);//
+			// ////////////////////////////////////////////
 			urlQuery += "&gsrsearch=" + qry
 					+ "&gsrprop=titlesnippet&format=xml&continue=";
 			for (i = 0; i < n; i += 50) {
 				offset = urlQuery + urlOffset + i;
 				xmlOutput = HttpQueries.sendGetQuery(offset, client);
-				//xmlOutput = HttpQueries.sendGet(offset);
-				//System.out.println(xmlOutput);
+				// xmlOutput = HttpQueries.sendGet(offset);
+				// System.out.println(xmlOutput);
 				extractURLs(xmlOutput, query);
-				//break;
+				// break;
 			}
-			
-			scoreWriter.write(query+"="+neMap.get(query)+"\n");
-			scoreWriter.flush();
+
 		} catch (HttpException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
@@ -108,7 +107,7 @@ public class NEWiki {
 		} finally {
 
 		}
-		return results;
+		return false;
 	}
 
 	private float rank(String ne, float tcount, int hits, int flag, int ngram) {
@@ -116,16 +115,16 @@ public class NEWiki {
 		float score = 1;
 		if (hits != 0) {
 			TitleWeight = (tcount / hits) * 10;
-			BodyWeight = (1 - TitleWeight/10) * 2;
-			
+			BodyWeight = (1 - TitleWeight / 10) * 2;
+
 		} else
 			TitleWeight = BodyWeight = 0;
-		nGramWeight=0;
-		if(ngram>1)
+		nGramWeight = 0;
+		if (ngram > 1)
 			nGramWeight = (ngram - 1) * 10;
 		NNPWeight = flag * 5;
-		score = score + TitleWeight + BodyWeight + nGramWeight + NNPWeight; 
-		//System.out.print(score);
+		score = score + TitleWeight + BodyWeight + nGramWeight + NNPWeight;
+		// System.out.print(score);
 		return score;
 
 	}
@@ -162,12 +161,7 @@ public class NEWiki {
 				}
 				results.add(result);
 			}
-			Integer cnt;
-			if((cnt = neMap.get(query))!=null){
-				neMap.put(query, cnt+count);
-			}else{
-				neMap.put(query, count);
-			}
+
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
@@ -186,7 +180,7 @@ public class NEWiki {
 		List<String> nerlist = eg.getNEs("custom_ner_output.txt");
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 				"custom_ner_count_output.txt")));
-		int k=1;
+		int k = 1;
 		for (String s : nerlist) {
 			System.out.println(k);
 			k++;
@@ -198,57 +192,62 @@ public class NEWiki {
 				if (i.endsWith("~")) {
 					// ~ is used for assigning extra score for NNPs
 					flag = 1;
-					i=i.replace("~", "");
+					i = i.replace("~", "");
 				}
 				// System.out.println(i);
-				eg.getTopURLs(i, 2100);
+				boolean res = eg.getTopURLs(i, 2100);
 				// String count = (eg.results.size()) + "|";
-				//int hits = eg.results.size();
-				int hits = eg.neMap.get(i);
-				int ngram = i.split(" ").length;
+				// int hits = eg.results.size();
+				if (res) {
+					System.out.println("word: " + i + " score : " + eg.neMap.get(i.toLowerCase()));
+					scores.add(eg.neMap.get(i.toLowerCase()));
+				} else {
+					int hits = eg.results.size();
+					int ngram = i.split(" ").length;
 
-				float tcount = eg.titleCount;
-				float score = eg.rank(i, tcount, hits, flag, ngram);
-				System.out.println("word: " + i + " score : " + score);
-				scores.add(score);
+					float tcount = eg.titleCount;
+					float score = eg.rank(i, tcount, hits, flag, ngram);
+					eg.neMap.put(i.toLowerCase(), score);
+					System.out.println("word: " + i + " score : " + score);
+					scores.add(score);
+					eg.scoreWriter.write(i + "=" + eg.neMap.get(i.toLowerCase()) + "\n");
+					eg.scoreWriter.flush();
 				
-				
+				}
+
 				// for (String res : eg.results)
 				// System.out.println(res);
-				//writer.print(score + ",");
+				// writer.print(score + ",");
 				eg.results.clear();
 				eg.titleCount = 0;
 			}
-			for(int j=0;j<3;j++)
-			{
-				if(j>scores.size())
+			for (int j = 0; j < 3; j++) {
+				if (j > scores.size())
 					break;
-				int maxindex=0;
+				int maxindex = 0;
 				float max = 0;
-				for(int sc=0;sc<scores.size();sc++)
-				{
-					if(scores.get(sc)>max){
-						//System.out.println(scores.get(sc));
+				for (int sc = 0; sc < scores.size(); sc++) {
+					if (scores.get(sc) > max) {
+						// System.out.println(scores.get(sc));
 						max = scores.get(sc);
-						maxindex=sc;
+						maxindex = sc;
 					}
 				}
 				SNEs.add(words[maxindex]);
 				scores.set(maxindex, -1.0f);
-			
+
 			}
 			StringBuilder builder = new StringBuilder();
-			for(String sne : SNEs){
-				if(sne.endsWith("~"))
+			for (String sne : SNEs) {
+				if (sne.endsWith("~"))
 					sne = sne.substring(0, sne.lastIndexOf('~'));
 				builder.append(sne + ",");
-				
+
 			}
-			writer.write(builder.substring(0, builder.lastIndexOf(","))+"\n");
+			writer.write(builder.substring(0, builder.lastIndexOf(",")) + "\n");
 			writer.flush();
-			
-			
-			///writer.print("\n");
+
+			// /writer.print("\n");
 			// System.out.print("\n");
 		}
 		eg.scoreWriter.close();
