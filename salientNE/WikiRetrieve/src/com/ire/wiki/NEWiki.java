@@ -13,9 +13,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,14 +47,54 @@ public class NEWiki {
 	private float titleCount;
 	private Map<String, Float> neMap;
 	private String scoreFile = "./score.txt";
+	private String stopWords = "./stopwords.txt";
 	private BufferedWriter scoreWriter;
+	private Set<String> stopwordSet;
 
 	public NEWiki() throws IOException {
 		neMap = new HashMap<String, Float>();
 		HttpHost proxy = new HttpHost("proxy.iiit.ac.in", 8080);
 		client = new DefaultHttpClient();
 		client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-		scoreWriter = new BufferedWriter(new FileWriter(scoreFile));
+		scoreWriter = new BufferedWriter(new FileWriter(scoreFile,true));
+		stopwordSet = new HashSet<String>();
+	}
+
+	private void loadStopWords() {
+		Scanner sc = null;
+		try {
+			sc = new Scanner(new File(stopWords));
+			String line;
+			while (sc.hasNext()) {
+				line = sc.nextLine();
+				stopwordSet.add(line);
+
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (sc != null)
+				sc.close();
+		}
+
+	}
+	
+	private void loadScores(){
+		Scanner sc =null;
+		try{
+			sc = new Scanner(new File(scoreFile));
+			String line,content[];
+			while(sc.hasNext()){
+				line = sc.nextLine();
+				content = line.split("=");
+				neMap.put(content[0].toLowerCase(),Float.parseFloat(content[1]));
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			if(sc!=null)
+				sc.close();
+		}
 	}
 
 	public List<String> getNEs(String fileName) {
@@ -85,26 +128,19 @@ public class NEWiki {
 		try {
 
 			String qry = URLEncoder.encode(query, "UTF-8");
-			// System.out.println(query);//
-			// ////////////////////////////////////////////
 			urlQuery += "&gsrsearch=" + qry
 					+ "&gsrprop=titlesnippet&format=xml&continue=";
 			for (i = 0; i < n; i += 50) {
 				offset = urlQuery + urlOffset + i;
 				xmlOutput = HttpQueries.sendGetQuery(offset, client);
-				// xmlOutput = HttpQueries.sendGet(offset);
-				// System.out.println(xmlOutput);
 				extractURLs(xmlOutput, query);
-				// break;
 			}
 
 		} catch (HttpException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
+		}finally {
 
 		}
 		return false;
@@ -176,7 +212,11 @@ public class NEWiki {
 
 	public static void main(String[] args) throws IOException {
 		NEWiki eg = new NEWiki();
-
+		long sttime = System.currentTimeMillis();
+		eg.loadStopWords();
+		eg.loadScores();
+		long endtime = System.currentTimeMillis();
+		System.out.println("Time : " + (endtime-sttime)/1000.0);
 		List<String> nerlist = eg.getNEs("custom_ner_output.txt");
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 				"custom_ner_count_output.txt")));
@@ -186,8 +226,9 @@ public class NEWiki {
 			k++;
 			String words[] = s.split("\\|");
 			List<Float> scores = new ArrayList<Float>();
-			List<String> SNEs = new ArrayList<String>();
+			Set<String> SNEs = new LinkedHashSet<String>();
 			for (String i : words) {
+				
 				int flag = 0;
 				if (i.endsWith("~")) {
 					// ~ is used for assigning extra score for NNPs
@@ -195,11 +236,16 @@ public class NEWiki {
 					i = i.replace("~", "");
 				}
 				// System.out.println(i);
+				if (eg.stopwordSet.contains(i.toLowerCase())) {
+					scores.add(0.0f);
+					continue;
+				}
 				boolean res = eg.getTopURLs(i, 2100);
 				// String count = (eg.results.size()) + "|";
 				// int hits = eg.results.size();
 				if (res) {
-					System.out.println("word: " + i + " score : " + eg.neMap.get(i.toLowerCase()));
+					System.out.println("word: " + i + " score : "
+							+ eg.neMap.get(i.toLowerCase()));
 					scores.add(eg.neMap.get(i.toLowerCase()));
 				} else {
 					int hits = eg.results.size();
@@ -210,9 +256,10 @@ public class NEWiki {
 					eg.neMap.put(i.toLowerCase(), score);
 					System.out.println("word: " + i + " score : " + score);
 					scores.add(score);
-					eg.scoreWriter.write(i + "=" + eg.neMap.get(i.toLowerCase()) + "\n");
+					eg.scoreWriter.write(i + "="
+							+ eg.neMap.get(i.toLowerCase()) + "\n");
 					eg.scoreWriter.flush();
-				
+
 				}
 
 				// for (String res : eg.results)
@@ -221,6 +268,7 @@ public class NEWiki {
 				eg.results.clear();
 				eg.titleCount = 0;
 			}
+			
 			for (int j = 0; j < 3; j++) {
 				if (j > scores.size())
 					break;
@@ -233,7 +281,9 @@ public class NEWiki {
 						maxindex = sc;
 					}
 				}
-				SNEs.add(words[maxindex]);
+				if(scores.get(maxindex)>0.0f){
+					SNEs.add(words[maxindex]);
+				}
 				scores.set(maxindex, -1.0f);
 
 			}
