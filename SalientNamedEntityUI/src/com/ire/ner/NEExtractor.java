@@ -16,12 +16,10 @@ public class NEExtractor {
 	private static final String PIPE = "|";
 	private static final String _NN = "_NN";
 	private static final String _NNS = "_NNS";
-	private static final String _NNP = "_NNP";
 	private static final String _HT = "_HT";
 	private static final String _USR = "_USR";
 	private static final String _IN = "_IN";
 
-	private static final String INP_FILE = "tagged_doc.txt";
 
 	private String getNEs(String tweet) {
 		boolean isNNP = false;
@@ -52,11 +50,11 @@ public class NEExtractor {
 						break;
 					word = words[i];
 				}
-				StringBuilder sb = new StringBuilder(nes);
+				/*StringBuilder sb = new StringBuilder(nes);
 				sb.deleteCharAt(sb.length() - 1);
 				nes = sb.toString();
-				nes += "~" + PIPE;
-				i--;
+				*/
+				
 			} else if (word.endsWith(_NN) || word.endsWith(_NNS)) {
 				while (word.endsWith(_NN) || word.endsWith(_NNS)) {
 					nes += word.substring(0, word.indexOf(_)) + " ";
@@ -78,19 +76,20 @@ public class NEExtractor {
 				sb.deleteCharAt(sb.length() - 1);
 				nes = sb.toString();
 				nes += PIPE;
-				i--;
+				
 				// NN after NNP not getting recognized
 			}
-
+			
 			if (i != words.length && i + 1 != words.length
 					&& words[i].endsWith(_IN)
-					&& (word.equals("of") || word.equals("for"))
+					&& (word.equals("of_IN") || word.equals("for_IN"))
 					&& words[i + 1].contains(_NN)) {
+				System.out.println("here");
 				nes += word.substring(0, word.indexOf(_)) + " ";
 				i++;
 				word = words[i];
-				while (word.endsWith(_NN) || word.endsWith(_NNS)) {
-					nes += word.substring(0, word.indexOf(_)) + PIPE;
+				while (word.contains(_NN)) {
+					nes += word.substring(0, word.indexOf(_)) + " ";
 					i++;
 					// More than one NEs could be separated by , or .
 					if (word.contains(COMMA) || word.contains(FULL_STOP)
@@ -100,11 +99,18 @@ public class NEExtractor {
 						nes = nes.replace(QM, "");
 						break;
 					}
+					word = words[i];
 
 				}
 
 				i--;
+			}else if(isNNP){
+				if(nes.endsWith(" "))
+					nes = nes.substring(0, nes.length()-1);
+				nes += "~" + PIPE;
+				isNNP = false;
 			}
+			
 
 		}
 		if (nes.contains(PIPE))

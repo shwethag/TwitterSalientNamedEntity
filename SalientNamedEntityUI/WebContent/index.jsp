@@ -21,6 +21,8 @@
 	    $('#go').click(function() {
 		 var content = document.getElementById("txtbox").value;
 		 $('#sne1').val('processing...');
+		 $('#sne2').val(' ');
+		 $('#sne3').val(' ');
 		     $.ajax({
 	            url : 'SNE_UI',
 	            type:'post',

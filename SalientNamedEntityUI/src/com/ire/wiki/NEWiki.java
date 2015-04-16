@@ -1,7 +1,9 @@
 package com.ire.wiki;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,9 +13,13 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
 
+import javax.servlet.ServletContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -40,33 +46,90 @@ public class NEWiki {
 	private float NNPWeight;
 	private float BodyWeight;
 	private float titleCount;
-	private Map<String,Integer> sneMap;
-	public NEWiki() {
-		sneMap = new HashMap<String, Integer>();
+	private String scoreFile = "/WEB-INF/score.txt";
+	private String stopWords = "/WEB-INF/stopwords.txt";
+	private Map<String, Float> neMap;
+	private BufferedWriter scoreWriter;
+	private Set<String> stopwordSet;
+	private ServletContext context;
+
+	public NEWiki(ServletContext cntxt) throws IOException {
+		context = cntxt;
+		neMap = new HashMap<String, Float>();
 		HttpHost proxy = new HttpHost("proxy.iiit.ac.in", 8080);
 		client = new DefaultHttpClient();
 		client.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+		System.out.println(context.getContextPath());
+		String path = context.getRealPath(scoreFile);
+		stopwordSet = new HashSet<String>();
+		loadScores();
+		loadStopWords();
+		scoreWriter = new BufferedWriter(new FileWriter(path, true));
+		
+		
 	}
 
-	private List<String> getTopURLs(String query, int n) {
-		if(sneMap.containsKey(query)){
-			return results;
+	private void loadStopWords() {
+		Scanner sc = null;
+		try {
+			String path = context.getRealPath(stopWords);
+			
+			sc = new Scanner(new File(path));
+			String line;
+			while (sc.hasNext()) {
+				line = sc.nextLine();
+				stopwordSet.add(line);
+
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (sc != null)
+				sc.close();
+		}
+
+	}
+
+	private void loadScores() {
+		Scanner sc = null;
+		try {
+			String path = context.getRealPath(scoreFile);
+			
+			sc = new Scanner(new File(path));
+			String line, content[];
+			while (sc.hasNext()) {
+				line = sc.nextLine();
+				content = line.split("=");
+				neMap.put(content[0].toLowerCase(),
+						Float.parseFloat(content[1]));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (sc != null)
+				sc.close();
+		}
+	}
+
+	public boolean getTopURLs(String query, int n) {
+		if (neMap.containsKey(query.toLowerCase())) {
+			System.out.println("exits");
+			return true;
 		}
 		String urlQuery = url + "api.php?action=query&format=xml";
 		String xmlOutput;
 		int i = 0;
-		int count;
 		String urlOffset = "&generator=search&gsrlimit=50&gsroffset=";
 		String offset = "";
 		try {
-			
+
 			String qry = URLEncoder.encode(query, "UTF-8");
 			urlQuery += "&gsrsearch=" + qry
 					+ "&gsrprop=titlesnippet&format=xml&continue=";
 			for (i = 0; i < n; i += 50) {
 				offset = urlQuery + urlOffset + i;
 				xmlOutput = HttpQueries.sendGetQuery(offset, client);
-				count = extractURLs(xmlOutput, query);
+				extractURLs(xmlOutput, query);
 			}
 
 		} catch (HttpException e) {
@@ -76,7 +139,7 @@ public class NEWiki {
 		} finally {
 
 		}
-		return results;
+		return false;
 	}
 
 	private float rank(String ne, float tcount, int hits, int flag, int ngram) {
@@ -129,12 +192,7 @@ public class NEWiki {
 				}
 				results.add(result);
 			}
-			Integer cnt;
-			if((cnt = sneMap.get(query))==null)
-				sneMap.put(query, count);
-			else{
-				sneMap.put(query, count+cnt);
-			}
+
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
@@ -147,12 +205,12 @@ public class NEWiki {
 		return count;
 	}
 
-	public String getSNE(String neList) throws FileNotFoundException {
+	public String getSNE(String neList) throws IOException {
 
 		String words[] = neList.split("\\|");
-		String sneList="";
+		String sneList = "";
 		List<Float> scores = new ArrayList<Float>();
-		List<String> SNEs = new ArrayList<String>();
+		Set<String> SNEs = new LinkedHashSet<String>();
 		for (String i : words) {
 			int flag = 0;
 			if (i.endsWith("~")) {
@@ -160,43 +218,59 @@ public class NEWiki {
 				flag = 1;
 				i = i.replace("~", "");
 			}
-			getTopURLs(i, 700);
-			int hits = sneMap.get(i);//results.size();
-			int ngram = i.split(" ").length;
+			if (stopwordSet.contains(i.toLowerCase())) {
+				scores.add(0.0f);
+				continue;
+			}
 
-			float tcount = titleCount;
-			float score = rank(i, tcount, hits, flag, ngram);
-			scores.add(score);
+			boolean res = getTopURLs(i, 700);
+			if (res) {
+				scores.add(neMap.get(i.toLowerCase()));
+			} else {
+				int hits = results.size();
+				int ngram = i.split(" ").length;
+
+				float tcount = titleCount;
+				float score = rank(i, tcount, hits, flag, ngram);
+				neMap.put(i.toLowerCase(), score);
+				System.out.println("word: " + i + " score : " + score);
+				scores.add(score);
+				scoreWriter.write(i + "=" + neMap.get(i.toLowerCase()) + "\n");
+				scoreWriter.flush();
+
+			}
 
 			results.clear();
 			titleCount = 0;
 		}
-			for (int j = 0; j < 3; j++) {
-				if (j >= scores.size())
-					break;
-				int maxindex = 0;
-				float max = 0;
-				for (int sc = 0; sc < scores.size(); sc++) {
-					if (scores.get(sc) > max) {
-						max = scores.get(sc);
-						maxindex = sc;
-					}
+		for (int j = 0; j < 3; j++) {
+			if (j >= scores.size())
+				break;
+			int maxindex = 0;
+			float max = 0;
+			for (int sc = 0; sc < scores.size(); sc++) {
+				if (scores.get(sc) > max) {
+					max = scores.get(sc);
+					maxindex = sc;
 				}
+			}
+			if (scores.get(maxindex) > 0.0f) {
 				SNEs.add(words[maxindex]);
-				scores.set(maxindex, -1.0f);
-
 			}
-			StringBuilder builder = new StringBuilder();
-			for (String sne : SNEs) {
-				if (sne.endsWith("~"))
-					sne = sne.substring(0, sne.lastIndexOf('~'));
-				builder.append(sne + ",");
+			scores.set(maxindex, -1.0f);
 
-			}
-			sneList = builder.substring(0, builder.lastIndexOf(","));
+		}
+		StringBuilder builder = new StringBuilder();
+		for (String sne : SNEs) {
+			if (sne.endsWith("~"))
+				sne = sne.substring(0, sne.lastIndexOf('~'));
+			builder.append(sne + ",");
 
-		
+		}
+		sneList = builder.substring(0, builder.lastIndexOf(","));
+
 		client.getConnectionManager().shutdown();
+		scoreWriter.close();
 		return sneList;
 	}
 

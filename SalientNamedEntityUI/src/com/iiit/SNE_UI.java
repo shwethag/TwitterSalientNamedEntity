@@ -66,7 +66,7 @@ public class SNE_UI extends HttpServlet {
 		NEExtractor extractor = new NEExtractor();
 		String namedEntities = extractor.getNamedEntities(tagged);
 		System.out.println("--------"+namedEntities);
-		NEWiki newiki = new NEWiki();
+		NEWiki newiki = new NEWiki(cntxt);
 		String sne = newiki.getSNE(namedEntities);
 		System.out.println("--------"+sne);
 		// Process the request here :
