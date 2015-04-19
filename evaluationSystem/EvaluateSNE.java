@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -17,18 +19,40 @@ public class EvaluateSNE {
 		positiveCnt = negativeCnt = partialCnt = missingCnt = 0;
 	}
 
-	private void printResults() {
-		precision = (positiveCnt + 0.5 * partialCnt) / (positiveCnt + negativeCnt + partialCnt);
-		precision *= 100;
+	private void printResults() throws IOException {
+		PrintWriter writer = new PrintWriter(new File("./output.txt"));
+
+		System.out.println();
+		System.out.println("Positive count -->" + positiveCnt);
+		writer.println("Positive count -->" + positiveCnt);
 		
-		recall = (positiveCnt + 0.5 * partialCnt) / (positiveCnt + partialCnt + missingCnt);
-		recall *= 100;
+		System.out.println("Negative count --> " + negativeCnt);
+		writer.println("Negative count -->" + negativeCnt);
+		
+		System.out.println("Partial match count -->" + partialCnt);
+		writer.println("Partial match count -->" + partialCnt);
+		
+		System.out.println("Missing count -->" + missingCnt);
+		writer.println("Missing count -->" + missingCnt);
+		
+		precision = (positiveCnt + 0.5 * partialCnt) / (double)(positiveCnt + negativeCnt + partialCnt);
+		precision *= 100.0;
+		
+		recall = (positiveCnt + 0.5 * partialCnt) / (double)(positiveCnt + partialCnt + missingCnt);
+		recall *= 100.0;
 		
 		fScore = (2 * precision * recall)/(precision+recall);
 		
 		System.out.println("PRECISION :" + precision);
+		writer.println("PRECISION :" + precision);
+		
 		System.out.println("RECALL :" + recall);
+		writer.println("RECALL :" + recall);
+		
 		System.out.println("F-SCORE : " + fScore );
+		writer.println("F-SCORE : " + fScore);
+		
+		writer.close();
 	}
 
 	private void evaluate() throws FileNotFoundException {
@@ -93,11 +117,12 @@ public class EvaluateSNE {
 
 		try {
 			esne.evaluate();
-		} catch (FileNotFoundException e) {
+			esne.printResults();
+		} catch (IOException e) {
 			System.err.println("Invalid file path");
 			e.printStackTrace();
 		}
-		esne.printResults();
+		
 	}
 
 }

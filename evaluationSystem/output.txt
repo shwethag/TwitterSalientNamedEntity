@@ -1,0 +1,7 @@
+Positive count -->1385
+Negative count -->616
+Partial match count -->1225
+Missing count -->786
+PRECISION :61.91878487290763
+RECALL :58.819199057714954
+F-SCORE : 60.32920567804288
